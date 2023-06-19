@@ -4,7 +4,7 @@ This bash script allows you to change the background color of the Applications m
 *I'm not sure if it works in other versions.*
 
 Just select a color using the color-picker dialog box and select the opacity using the slider gui.<br>
-The opacity values range from 0 to 10 which in reality equals go from 0 to 1.<br>
+The opacity values range from 0 to 10 which in reality goes from 0 to 1.<br>
 
 ## Dependencies:
 ```
