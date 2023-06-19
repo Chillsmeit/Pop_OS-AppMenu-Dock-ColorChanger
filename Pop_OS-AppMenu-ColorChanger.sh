@@ -3,45 +3,9 @@
 # Do not run this script as sudo!
 # If the script is run as sudo, Zenity won't be able to work correctly.
 if [[ $EUID -eq 0 ]]; then
-	zenity --info --title="!!! Running with sudo !!!" --text="Please do not run this script with sudo!"
+	zenity --info --title="Running with sudo!" --text="Please do not run this script with sudo!"
 	exit 0
-else
-	zenity --warning --title="Warning !" --text="This script will ask for your root password."
-	zenity --question --title "Warning" --text "Are you sure you want to continue?" --ok-label="Yes" --cancel-label="No"
-	continue=$?
-	if [ $continue -eq 1 ]; then
-        	exit 0
-	fi
 fi
-
-# Loop for password input
-while true; do
-
-	# Prompt for sudo password
-	password=$(zenity --password --title="Getting privileges")
-
-	# Check if zenity was cancelled or closed and exit the script
-    	if [[ $? -ne 0 ]]; then
-		exit
-	fi
-
-	# Check if password is empty
-	if [[ -z "$password" ]]; then
-		zenity --error --text="Please input a password."
-		continue
-	fi
-
-	# Check if sudo password is correct
-	echo "$password" | sudo -Sk ls >/dev/null 2>&1
-	if [[ $? -ne 0 ]]; then
-		zenity --error --text="Incorrect password. Try again."
-		continue
-	fi
-
-	# Password is correct, break out of the loop
-	break
-done
-
 # Default Pop!_OS background rgb values:
 default_rgb_values="26,30,36"
 default_opacity="1"
@@ -93,7 +57,7 @@ if [[ $change_or_reset == "Change Color" ]]; then
 		fi
 		
 		# Write the chosen rgb and opacity values
-		echo "$password" | sudo -S sed -i "2s|.*|background-color: rgba($rgb_values,$opacity);|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
+		pkexec sudo -S sed -i "2s|.*|background-color: rgba($rgb_values,$opacity);|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
 	else
 	exit 0
 	fi
@@ -101,7 +65,7 @@ if [[ $change_or_reset == "Change Color" ]]; then
 # If User choose to reset colors
 elif [[ $change_or_reset == "Reset Values" ]]; then
 	# Write the default rgb and opacity values
-	echo "$password" | sudo -S sed -i "2s|.*|background-color: rgba($default_rgb_values,$default_opacity);|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
+	pkexec sudo -S sed -i "2s|.*|background-color: rgba($default_rgb_values,$default_opacity);|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
 else
   exit 0
 fi
