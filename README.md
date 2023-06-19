@@ -32,3 +32,6 @@ Run the script **without** sudo privileges:
 ```
 **After choosing your desired color or opacity, you have to restart the shell:**
 `Alt+F2`+`r` and Enter
+
+## Screenshots:
+![19-06-2023_4](https://github.com/Chillsmeit/Pop_OS-AppMenu-ColorChanger/assets/93094077/33b6f03a-446f-4ad4-b215-22eb6d94823c)
