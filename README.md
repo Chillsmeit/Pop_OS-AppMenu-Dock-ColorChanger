@@ -30,3 +30,5 @@ Run the script **without** sudo privileges:
 ```
 ./Pop_OS-AppMenu-ColorChanger.sh
 ```
+**After choosing your desired color or opacity, you have to restart the shell:**
+`Alt+F2`+`r` and Enter
