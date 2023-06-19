@@ -6,7 +6,7 @@ if [[ $EUID -eq 0 ]]; then
 	zenity --info --title="!!! Running with sudo !!!" --text="Please do not run this script with sudo!"
 	exit 0
 else
-	zenity --warning --title="Warning !" --text="This script will ask for your root password.\nZenity won't work correctly if the script is directly run as sudo because the UI for the color picker will be broken.\nWith this solution, the script will store the password in a variable and use it after displaying the color picker gui.\nFeel free to check the code and read the description"
+	zenity --warning --title="Warning !" --text="This script will ask for your root password."
 	zenity --question --title "Warning" --text "Are you sure you want to continue?" --ok-label="Yes" --cancel-label="No"
 
 fi
