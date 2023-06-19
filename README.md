@@ -13,8 +13,7 @@ sudo apt-get update && sudo apt-get install dbus-x11 zenity wget
 
 ## ⚠️ Warning:
 Zenity won't work properly if the script is directly run as sudo because the GUI for the color picker will be broken.<br>
-Due to this reason, the workaround is to ask and store the root password in a variable and use it to write the values.<br>
-Feel free to check the code if you have security concerns.
+Please run the script without sudo. It will prompt your root password when it needs to overwrite the values.
 
 ## Instructions:
 
