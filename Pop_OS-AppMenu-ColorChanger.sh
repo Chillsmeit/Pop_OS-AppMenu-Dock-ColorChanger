@@ -8,7 +8,10 @@ if [[ $EUID -eq 0 ]]; then
 else
 	zenity --warning --title="Warning !" --text="This script will ask for your root password."
 	zenity --question --title "Warning" --text "Are you sure you want to continue?" --ok-label="Yes" --cancel-label="No"
-
+	continue=$?
+	if [ $continue -eq 1 ]; then
+        	exit 0
+	fi
 fi
 
 # Loop for password input
