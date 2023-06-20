@@ -1,6 +1,6 @@
 # Description
 
-This bash script allows you to change the background color of the Applications menu in Pop!_OS 22.04.<br>
+This bash script allows you to change the background color & opacity of the Applications Menu and the Dock in Pop!_OS 22.04.<br>
 
 Just select a color using the color-picker dialog box and select the opacity using the slider gui.<br>
 The opacity values range from 0 to 10 which in reality goes from 0 to 1.<br>
@@ -18,15 +18,15 @@ Please run the script without sudo. It will prompt your root password when it ne
 
 Download the script in terminal with:
 ```
-wget https://raw.githubusercontent.com/Chillsmeit/Pop_OS-AppMenu-ColorChanger/main/Pop_OS-AppMenu-ColorChanger.sh
+wget https://raw.githubusercontent.com/Chillsmeit/Pop_OS-AppMenu-Dock-ColorChanger/main/Pop_OS-AppMenu-Dock-ColorChanger.sh
 ```
 Make the script executable:
 ```
-chmod +x Pop_OS-AppMenu-ColorChanger.sh
+chmod +x Pop_OS-AppMenu-Dock-ColorChanger.sh
 ```
 Run the script **without** sudo privileges:
 ```
-./Pop_OS-AppMenu-ColorChanger.sh
+./Pop_OS-AppMenu-Dock-ColorChanger.sh
 ```
 **After choosing your desired color or opacity, you have to restart the shell:**
 `Alt+F2`+`r` and Enter
