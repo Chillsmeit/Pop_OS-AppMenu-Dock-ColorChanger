@@ -6,11 +6,10 @@ if [[ $EUID -eq 0 ]]; then
 	zenity --info --title="Running with sudo!" --text="Please do not run this script with sudo!"
 	exit 0
 fi
+
 # Default Pop!_OS background rgb values:
 default_app_rgb="26,30,36"
-default_app_opacity="1"
 default_dock_hex="#33302f"
-default_dock_opacity="1"
 
 # Menu to choose to change or reset values
 change_or_reset=$(zenity --list --title='Pop!_OS AppMenu Color Changer' --text="Please choose an option:" --radiolist --column "" --column "Options" FALSE "Change Color" FALSE "Reset Values")
@@ -18,7 +17,7 @@ change_or_reset=$(zenity --list --title='Pop!_OS AppMenu Color Changer' --text="
 # Check which option the user selected
 if [[ $change_or_reset == "Change Color" ]]; then
 
-	# Ask the user if they want to change AppMenu opacity
+	# Ask the user if they want to change AppMenu Color
 	zenity --question --text "Do you want to change the App Menu Color?"
 
 	# Store the exit status of the Zenity dialog in a variable
@@ -44,7 +43,7 @@ if [[ $change_or_reset == "Change Color" ]]; then
 		zenity --info --title="Colors" --text="Chosen Rgb value: $rgb_values\nChosen Hex value: $hex_values"
 		
 		# Write rgb values
-		pkexec sudo -S sed -E -i "2s|(^.*background-color: rgba\()([0-9]+,[0-9]+,[0-9]+)(,[0-9\.]+)?(\).*)|\1$rgb_values\3\4|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
+		pkexec sudo -S sed -i "2s|.*|background-color: rgba($rgb_values,1);|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
 		
 	fi
 	
@@ -155,9 +154,10 @@ elif [[ $change_or_reset == "Reset Values" ]]; then
 	
 	# Check the exit status to determine user's choice
 	if [ $app_reset_response -eq 0 ]; then # User chose "Yes" to enable opacity
-	
+
 		# Write the default rgb and opacity values
-		pkexec sudo -S sed -i "2s|.*|background-color: rgba($default_app_rgb,$default_app_opacity);|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
+		echo $default_app_rgb
+		pkexec sudo -S sed -i "2s|.*|background-color: rgba(${default_app_rgb%.*});|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
 		zenity --question --title "Restart Shell" --text "You need to restart the Gnome Shell to see your AppMenu changes.\nDo you want to proceed?" --ok-label="Yes" --cancel-label="No"
 		restartshell=$?
 		if [ $restartshell -eq 1 ]; then
