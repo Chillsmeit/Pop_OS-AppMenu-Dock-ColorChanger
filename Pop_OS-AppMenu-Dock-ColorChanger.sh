@@ -11,10 +11,10 @@ fi
 default_app_rgb="26,30,36"
 default_dock_hex="#33302f"
 
-# Menu to choose to change or reset values
+# Menu to Change or Reset values
 change_or_reset=$(zenity --list --title='Pop!_OS AppMenu Color Changer' --text="Please choose an option:" --radiolist --column "" --column "Options" FALSE "Change Color" FALSE "Reset Values")
 
-# Check which option the user selected
+# User chose Change Color
 if [[ $change_or_reset == "Change Color" ]]; then
 
 	# Ask the user if they want to change AppMenu Color
@@ -29,7 +29,6 @@ if [[ $change_or_reset == "Change Color" ]]; then
 		# Prompt user to choose a hex color
 		app_color=$(zenity --color-selection --show-palette --title="Select App Menu Background Color" --color="chosencolor")
 
-
 		# Extract the rgb values from the chosen color (only the numbers)
 		rgb="${app_color#*(}"  # Remove everything before the first '('
 		rgb="${rgb%)*}"    # Remove everything after the last ')'
@@ -42,7 +41,7 @@ if [[ $change_or_reset == "Change Color" ]]; then
 		# Display the selected colors
 		zenity --info --title="Colors" --text="Chosen Rgb value: $rgb_values\nChosen Hex value: $hex_values"
 		
-		# Write rgb values
+		# Write the rgb values to dark.css
 		pkexec sudo -S sed -i "2s|.*|background-color: rgba($rgb_values,1);|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
 		
 	fi
@@ -59,7 +58,7 @@ if [[ $change_or_reset == "Change Color" ]]; then
 		# Check what is the current opacity value the user has
 		current_app_opacity=$(awk -F '[()]' '/background-color: rgba/ {split($2, arr, ","); if (length(arr) >= 4) print arr[4]; else print 0.3}' "/usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css")
 		current_app_opacity=$(printf "%.0f" $(echo "$current_app_opacity*10" | bc)) # Workaround because zenity doesn't support float step values, only int. Multiply by 10.
-		chosen_app_opacity=$(zenity --scale --title="Scale Example" --text="Select a value" --min-value=0 --max-value=10 --step=1 --value=$current_app_opacity)
+		chosen_app_opacity=$(zenity --scale --title="Scale Example" --text="Select a value" --min-value=0 --max-value=10 --step=1 --value=$current_app_opacity) # Show slider with 0 to 10 values to choose from
 		
 		if [ $chosen_app_opacity -eq 10 ]; then
 			chosen_app_opacity=1
@@ -108,10 +107,12 @@ if [[ $change_or_reset == "Change Color" ]]; then
 
 	# Check the exit status to determine user's choice
 	if [ $dock_opacity_response -eq 0 ]; then # User chose "Yes" to enable opacity
+ 
 		# Check what is the current opacity value the user has
 		current_dock_opacity=$(gsettings get org.gnome.shell.extensions.dash-to-dock background-opacity)
 		current_dock_opacity=$(printf "%.0f" $(echo "$current_dock_opacity*10" | bc))
 		chosen_dock_opacity=$(zenity --scale --title="Scale Example" --text="Select a value" --min-value=0 --max-value=10 --step=1 --value=$current_dock_opacity)
+  
 		if [ $chosen_dock_opacity -eq 10 ]; then
 			chosen_dock_opacity=1
 		elif [ $chosen_dock_opacity -eq 0 ]; then
@@ -119,10 +120,12 @@ if [[ $change_or_reset == "Change Color" ]]; then
 		else
 			chosen_dock_opacity=$(printf "%.1f" $(echo "scale=1; $chosen_dock_opacity / 10" | bc)) # Workaround because zenity doesn't support float step values, only int. Divide by 10.
 		fi
+  
+  		# Write the chosen dock opacity
 		gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity $chosen_dock_opacity
 	fi
 		
-
+	# Ask user to restart the Gnome shell to see the AppMenu Color changes
 	zenity --question --title "Restart Shell" --text "You need to restart the Gnome Shell to see your AppMenu changes.\nDo you want to proceed?" --ok-label="Yes" --cancel-label="No"
 	restartshell=$?
 	if [ $restartshell -eq 1 ]; then
@@ -133,6 +136,7 @@ if [[ $change_or_reset == "Change Color" ]]; then
 
 # If User chose to reset colors
 elif [[ $change_or_reset == "Reset Values" ]]; then
+
 	# Ask the user if they want to reset dock values
 	zenity --question --text "Reset Dock?"
 
@@ -155,8 +159,7 @@ elif [[ $change_or_reset == "Reset Values" ]]; then
 	# Check the exit status to determine user's choice
 	if [ $app_reset_response -eq 0 ]; then # User chose "Yes" to enable opacity
 
-		# Write the default rgb and opacity values
-		echo $default_app_rgb
+		# Write the default rgb and remove opacity
 		pkexec sudo -S sed -i "2s|.*|background-color: rgba(${default_app_rgb%.*});|" /usr/share/gnome-shell/extensions/pop-cosmic@system76.com/dark.css
 		zenity --question --title "Restart Shell" --text "You need to restart the Gnome Shell to see your AppMenu changes.\nDo you want to proceed?" --ok-label="Yes" --cancel-label="No"
 		restartshell=$?
